@@ -7,16 +7,16 @@ This [Laravel Nova](https://nova.laravel.com/) package helps developers load tra
 
 ## Requirements
 
-- `php: >=7.2`
-- `laravel/framework: ^7.0 || ^8.0`
-- `laravel/nova: ^3.0`
+- `php: >=8.0`
+- `laravel/framework: ^8.0`
+- `laravel/nova: ^3.30.0`
 
 ## Installation
 
 Install the package in a Laravel Nova project via Composer:
 
 ```bash
-composer require optimistdigital/nova-translations-loader
+composer require optimistdigital/nova-translations-loader-php
 ```
 
 ## Usage
@@ -24,7 +24,7 @@ composer require optimistdigital/nova-translations-loader
 Inside a Laravel's `ServiceProvider`, use the `LoadsNovaTranslations` trait and call `$this->loadTranslations()`:
 
 ```php
-use OptimistDigital\NovaTranslationsLoader\LoadsNovaTranslations;
+use OptimistDigital\NovaTranslationsLoaderPHP\LoadsNovaTranslations;
 
 class SomePackagesServiceProvider extends ServiceProvider
 {

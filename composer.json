@@ -1,6 +1,6 @@
 {
-  "name": "optimistdigital/nova-translations-loader",
-  "description": "This Laravel Nova package helps developers load translations into their packages.",
+  "name": "optimistdigital/nova-translations-loader-php",
+  "description": "A Laravel Nova package that simplifies the loading of translations inside other packages.",
   "keywords": [
     "laravel",
     "nova",
@@ -9,13 +9,12 @@
   ],
   "license": "MIT",
   "require": {
-    "php": ">=7.2.0",
-    "laravel/framework": "^7.21 || ^8.0 || ^9.0",
-    "laravel/nova": "^3.0"
+    "php": ">=8.0.0",
+    "laravel/nova": "^3.30.0"
   },
   "autoload": {
     "psr-4": {
-      "OptimistDigital\\NovaTranslationsLoader\\": "src/"
+      "OptimistDigital\\NovaTranslationsLoaderPHP\\": "src/"
     }
   },
   "extra": {
