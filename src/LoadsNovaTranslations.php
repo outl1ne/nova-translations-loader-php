@@ -35,10 +35,9 @@ trait LoadsNovaTranslations
     {
         if (app()->runningInConsole() && $publish) {
             $this->publishes([$pckgTransDir => resource_path("lang/vendor/{$pckgName}")], 'translations');
-            return;
         }
 
-        $this->loadTranslationsFrom($pckgTransDir, 'nova-menu-builder');
+        $this->loadTranslationsFrom($pckgTransDir, $pckgName);
 
         if (!method_exists(Nova::class, 'translations')) throw new Exception('Nova::translations method not found, please ensure you are using the correct version of Nova.');
 
