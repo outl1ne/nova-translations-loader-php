@@ -34,14 +34,14 @@ trait LoadsNovaTranslations
     private function translations($pckgTransDir, $pckgName, $publish)
     {
         if (app()->runningInConsole() && $publish) {
-            $this->publishes([$pckgTransDir => resource_path("lang/vendor/{$pckgName}")], 'translations');
+            $this->publishes([$pckgTransDir => lang_path("/vendor/{$pckgName}")], 'translations');
         }
 
         $this->loadTranslationsFrom($pckgTransDir, $pckgName);
 
         if (!method_exists(Nova::class, 'translations')) throw new Exception('Nova::translations method not found, please ensure you are using the correct version of Nova.');
 
-        Nova::serving(function (ServingNova $event) use ($pckgTransDir, $pckgName) {
+        Nova::serving(function (ServingNova $event) use ($pckgName) {
             /** @var Loader $loader */
             $loader = Container::getInstance()->make('translation.loader');
 
