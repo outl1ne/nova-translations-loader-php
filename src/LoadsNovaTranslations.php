@@ -28,31 +28,43 @@ trait LoadsNovaTranslations
         $packageTranslationsDir = $packageTranslationsDir ?? __DIR__ . '/../resources/lang';
         $packageTranslationsDir = rtrim($packageTranslationsDir, '/');
         $packageName = trim($packageName);
+
         $this->translations($packageTranslationsDir, $packageName, $publishTranslations);
     }
 
     private function translations($pckgTransDir, $pckgName, $publish)
     {
+        $publishTransDir = lang_path("vendor/{$pckgName}");
+
         if (app()->runningInConsole() && $publish) {
-            $this->publishes([$pckgTransDir => lang_path("/vendor/{$pckgName}")], 'translations');
+            $this->publishes([$pckgTransDir => $publishTransDir], 'translations');
         }
 
-        $this->loadTranslationsFrom($pckgTransDir, $pckgName);
+        $this->loadTranslationsFrom($pckgTransDir, "{$pckgName}-vendor");
+        $this->loadTranslationsFrom($publishTransDir, $pckgName);
 
         if (!method_exists(Nova::class, 'translations')) throw new Exception('Nova::translations method not found, please ensure you are using the correct version of Nova.');
 
         Nova::serving(function (ServingNova $event) use ($pckgName) {
-            /** @var Loader $loader */
-            $loader = Container::getInstance()->make('translation.loader');
+            $this->callAfterResolving('translator', function ($translator) use ($pckgName) {
+                $locale = app()->getLocale();
+                $fallbackLocale = config('app.fallback_locale');
 
-            $locale = app()->getLocale();
-            $fallbackLocale = config('app.fallback_locale');
+                $loader = $translator->getLoader();
+                $vndrName = "{$pckgName}-vendor";
 
-            Nova::translations(array_merge(
-                Arr::dot($loader->load('en', 'nova', $pckgName), "{$pckgName}::"),
-                Arr::dot($loader->load($fallbackLocale, 'nova', $pckgName), "{$pckgName}::"),
-                Arr::dot($loader->load($locale, 'nova', $pckgName), "{$pckgName}::")
-            ));
+                Nova::translations(array_merge(
+                    // First vendor files
+                    Arr::dot($loader->load('en', 'nova-multiselect-field', $vndrName), "{$pckgName}::"),
+                    Arr::dot($loader->load($fallbackLocale, 'nova-multiselect-field', $vndrName), "{$pckgName}::"),
+                    Arr::dot($loader->load($locale, 'nova-multiselect-field', $vndrName), "{$pckgName}::"),
+
+                    // Then project files
+                    Arr::dot($loader->load('en', 'nova-multiselect-field', $pckgName), "{$pckgName}::"),
+                    Arr::dot($loader->load($fallbackLocale, 'nova-multiselect-field', $pckgName), "{$pckgName}::"),
+                    Arr::dot($loader->load($locale, 'nova-multiselect-field', $pckgName), "{$pckgName}::"),
+                ));
+            });
         });
     }
 }
